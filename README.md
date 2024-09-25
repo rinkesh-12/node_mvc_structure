@@ -10,3 +10,4 @@ Run Commands:
 7. npm i nenoid
 8. npm i uuid
 9. npm i cookie-parser
+10. npm i jsonwebtoken

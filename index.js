@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { restrictToLoggedinUserOnly, checkAuth } = require("./middlewares/auth");
+const { restrictToLoggedinUserOnly, checkAuth, checkForAuthentication, restrectTo } = require("./middlewares/auth");
 
 // env file load
 require('dotenv').config();
@@ -23,14 +23,16 @@ const urlRoute = require("./routes/url");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+app.use(checkForAuthentication)
 // define route 
 
 
 app.use("/user", userRoute);
-app.use("/", checkAuth, staticRoute);
-// app.use("/url", urlRoute);
-app.use("/url", restrictToLoggedinUserOnly, urlRoute);
+// app.use("/", checkAuth, staticRoute);
+// app.use("/url", restrictToLoggedinUserOnly, urlRoute);
 
+app.use("/url", restrectTo(["NORMAL", "ADMIN"]), urlRoute);
+app.use("/", staticRoute);
+// app.use("/url", urlRoute);
 
 app.listen(PORT, ()=>{console.log(`Listening on port : ${PORT}`)})
